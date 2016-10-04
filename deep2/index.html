@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Vader - Disqus Stats</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width">
+		
+		<!--
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		-->
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://bootswatch.com/slate/bootstrap.min.css">
+
+		<link rel="stylesheet" href="app.css">
+
+		<script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.min.js"></script>
+
+	</head>
+	<body>
+
+	<div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="./" class="navbar-brand">Disqus Stats (Vader)</a>
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+          <ul class="nav navbar-nav">
+
+            <li>
+              <a data-toggle="modal" data-target="#aboutModal">About</a>
+            </li>
+
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://www.raymondcamden.com/" target="_blank">Built by Raymond</a></li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+	<div class="container">
+
+		<div class="row">
+			<div class="bs-component">
+              <div class="jumbotron">
+                <h1>VADER</h1>
+                <p>VADER is Very Advanced Disqus Enterprise Reporting. Disqus stats for the next generation. Or something.</p>
+              </div>
+            </div>
+		</div>
+
+		<div id="setup">
+
+			<div class="row">
+
+				<div class="page-header">
+					<h1>Setup</h1>
+				</div>
+
+				<div class="bs-component">
+
+					<div id="noPrevious" style="display:none">
+						<p>
+							It looks like this is your first time here. Enter a forum name below 
+							and we will attempt to download 100% of the comments for that forum.
+						</p>
+						<form class="form-inline">
+							<div class="form-group">
+								<label>New Forum
+								<input type="text" id="newForum" class="form-control" placeholder="forum name">
+								</labe>
+								<button class="btn btn-primary setupButton">Analyze</button>
+							</div>
+						</form>
+					</div>
+
+					<div id="hasPrevious" style="display:none">
+						<p>
+							Your last used forum is listed below. It was last updated <span id="lastCheck"></span>. 
+						</p>
+						<form class="form-inline">
+							<div class="form-group">
+								<label>Current Forum
+								<input type="text" id="oldForum" class="form-control">
+								</labe>
+								<button class="btn btn-primary setupButton">Analyze</button>
+							</div>
+						</form>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+		<div id="dataReady" style="display:none">
+
+			<div class="row">
+
+				<div class="page-header">
+				<h1>General Stats</h1>
+				</div>
+
+				<div class="bs-component">
+
+					<div class="col-lg-3">
+						<h2 class="text-center">Total Comments</h2>
+						<h1 class="text-center"><span id="totalComments"></span></h1>
+					</div>
+					<div class="col-lg-3">
+						<h2 class="text-center">Avg. Per Day</h2>
+						<h1 class="text-center"><span id="avgPerThread"></span></h1>
+					</div>
+					<div class="col-lg-3">
+						<h2 class="text-center">First Comment</h2>
+						<h1 class="text-center"><span id="firstComment"></span></h1>
+					</div>
+					<div class="col-lg-3">
+						<h2 class="text-center">Last Comment</h2>
+						<h1 class="text-center"><span id="lastComment"></span></h1>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="row">
+
+				<div class="page-header">
+				<h1>Comments Per Year</h1>
+				</div>
+
+				<div class="bs-component">
+					<canvas id="chart_byyear" width="500" height="200"></canvas>
+				</div>
+			</div>
+
+			<div class="row">
+
+				<div class="page-header">
+				<h1>Comments by Day of Week</h1>
+				</div>
+
+				<div class="bs-component">
+					<canvas id="chart_bydow" width="500" height="200"></canvas>
+				</div>
+			</div>
+
+
+			<div class="row">
+
+				<div class="page-header">
+				<h1>Thread Stats</h1>
+				</div>
+
+				<div class="bs-component">
+
+					<table id="threadTable" class="table table-striped table-hover ">
+						<thead>
+							<tr>
+								<th>Title</th>
+								<th># of Comments</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+
+
+			<div class="row">
+
+				<div class="page-header">
+				<h1>Top Commenters</h1>
+				</div>
+
+				<div class="bs-component">
+
+					<div id="topCommentersResults"></div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<div class="row" id="status"></div>
+
+	</div>
+
+	<!-- About Modal -->
+	<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel">About</h4>
+		</div>
+		<div class="modal-body">
+			<p>
+			This application demonstrates usage of the Disqus API. As it uses my personal API key, it may not work well.
+			Please see the source code at <a href="https://github.com/cfjedimaster/disqus-analytics" target="_new">Github</a> to run your own copy.
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		</div>
+		</div>
+	</div>
+	</div>
+
+
+	<script src="app.js"></script>
+
+	</body>
+</html>
